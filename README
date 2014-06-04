@@ -1,0 +1,10 @@
+(6/4/2014) 15:30  
+
+spar.pl is the stellar version of ppar2.pl
+
+It's significantly different in that spar.pl has 
+six hashes and I employ hash references to point 
+to only one working hash at a time.  But that 
+determination is made at runtime by the user.  
+
+
