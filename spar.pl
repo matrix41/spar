@@ -15,6 +15,8 @@ my $inputset;
 my $temp;
 my $temp1;
 my $temp2;
+my $temp2b;
+my $temp2c;
 
 
 # Step 1a of 3: Tie the hashes (ie to preserve insertion order)
@@ -226,22 +228,24 @@ if ( $hash_ref->{ lums } !~ /null/ )
 {
     $temp = log( $hash_ref->{ lums } ) / log(10);
     $hash_ref->{ lum } = sprintf("%.3f", $temp);
-    print "lums = ", $hash_ref->{ lums }, " and lum = ", $hash_ref->{ lum };
-    print "\n";
+#    print "lums = ", $hash_ref->{ lums }, " and lum = ", $hash_ref->{ lum };
+#    print "\n";
 }
+
 if ( ($hash_ref->{ lumserr1 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
 {
-    $temp1 = ( log( $hash_ref->{ lums } + $hash_ref->{ lumserr1 } ) - log( $hash_ref->{ lums } ) ) / log(10);
+    $temp1 = ( log( $hash_ref->{ lums } + abs( $hash_ref->{ lumserr1 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
     $hash_ref->{ lumerr1 } = sprintf("%.3f", $temp1);
-    print "lumserr1 = ", $hash_ref->{ lumserr1 }, " and lumerr1 = ", $hash_ref->{ lumerr1 };
-    print "\n";
+#    print "lumserr1 = ", $hash_ref->{ lumserr1 }, " and lumerr1 = ", $hash_ref->{ lumerr1 };
+#    print "\n";
 }
+
 if ( ($hash_ref->{ lumserr2 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
 {
-    $temp2 = ( log( $hash_ref->{ lums } - $hash_ref->{ lumserr2 } ) / log(10) ) - ( log( $hash_ref->{ lums } ) / log(10) );
+    $temp2 = ( log( $hash_ref->{ lums } - abs( $hash_ref->{ lumserr2 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
     $hash_ref->{ lumerr2 } = sprintf("%.3f", $temp2);
-    print "lumserr2 = ", $hash_ref->{ lumserr2 }, " and lumerr2 = ", $hash_ref->{ lumerr2 };
-    print "\n";
+#    print "lumserr2 = ", $hash_ref->{ lumserr2 }, " and lumerr2 = ", $hash_ref->{ lumerr2 };
+#    print "\n";
 }
 
 
