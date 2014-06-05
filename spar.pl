@@ -12,6 +12,9 @@ my $inputvalue;
 my $value;
 my $hash_ref;
 my $inputset;
+my $temp;
+my $temp1;
+my $temp2;
 
 
 # Step 1a of 3: Tie the hashes (ie to preserve insertion order)
@@ -215,6 +218,32 @@ printf $fh ("DESCRIPTION:     %s\n", $description);
 print  $fh  "FILETYPE:        edm\n";
 printf $fh ("FILENAME:        %s\n", $filename);
 printf $fh ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
+
+# Special algorithm check.  If certain specific parameters 
+# are initialized (ie not null), then calculate additional 
+# values for other related parameters. 
+if ( $hash_ref->{ lums } !~ /null/ ) 
+{
+    $temp = log( $hash_ref->{ lums } ) / log(10);
+    $hash_ref->{ lum } = sprintf("%.3f", $temp);
+    print "lums = ", $hash_ref->{ lums }, " and lum = ", $hash_ref->{ lum };
+    print "\n";
+}
+if ( ($hash_ref->{ lumserr1 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
+{
+    $temp1 = ( log( $hash_ref->{ lums } + $hash_ref->{ lumserr1 } ) - log( $hash_ref->{ lums } ) ) / log(10);
+    $hash_ref->{ lumerr1 } = sprintf("%.3f", $temp1);
+    print "lumserr1 = ", $hash_ref->{ lumserr1 }, " and lumerr1 = ", $hash_ref->{ lumerr1 };
+    print "\n";
+}
+if ( ($hash_ref->{ lumserr2 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
+{
+    $temp2 = ( log( $hash_ref->{ lums } - $hash_ref->{ lumserr2 } ) / log(10) ) - ( log( $hash_ref->{ lums } ) / log(10) );
+    $hash_ref->{ lumerr2 } = sprintf("%.3f", $temp2);
+    print "lumserr2 = ", $hash_ref->{ lumserr2 }, " and lumerr2 = ", $hash_ref->{ lumerr2 };
+    print "\n";
+}
+
 
 # Step 3f of 3: Now output all the planet parameters 
 print     "EDMT|star|$objectid|add|";
