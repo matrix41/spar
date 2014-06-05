@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use warnings;
-use feature qw(switch say); # NEED this for given-when block to work
+use feature qw(switch say); # need this for GIVEN-WHEN block to work
 
 use Tie::IxHash;
 
@@ -14,14 +14,13 @@ my $hash_ref;
 my $inputset;
 
 
-# Step 1 of 3: Initialize the hash and tie it (ie to preserve insertion order)
+# Step 1a of 3: Tie the hashes (ie to preserve insertion order)
 # note to self: awk '{printf "$parallax{%s} = \x27null\x27;\n", $1}' star01.input
 # note to self: awk '{printf "$spectral{%s} = \x27null\x27;\n", $1}' star02.input
 # note to self: awk '{printf "$vsini{%s} = \x27null\x27;\n", $1}' star03.input
 # note to self: awk '{printf "$rv{%s} = \x27null\x27;\n", $1}' star04.input
 # note to self: awk '{printf "$spar{%s} = \x27null\x27;\n", $1}' star05.input
 # note to self: awk '{printf "$photometry{%s} = \x27null\x27;\n", $1}' star06.input
-
 tie my %parallax, "Tie::IxHash" or die "could not tie %hash";
 tie my %spectral, "Tie::IxHash" or die "could not tie %hash";
 tie my %vsini, "Tie::IxHash" or die "could not tie %hash";
@@ -30,6 +29,7 @@ tie my %spar, "Tie::IxHash" or die "could not tie %hash";
 tie my %photometry, "Tie::IxHash" or die "could not tie %photometry";
 
 
+# Step 1b of 3: Initialize the hashes
 $parallax{plx} = 'null';
 $parallax{plxerr1} = 'null';
 $parallax{plxerr2} = 'null';
@@ -109,6 +109,8 @@ $photometry{photblend} = 'null';
 $photometry{photband} = 'null';
 $photometry{photrefid} = 'null';
 
+
+# Step 2a of 3: Prompt the user to select the stellar parameter set
 print "Select the stellar parameter set (a-f): \n";
 print "a) parallax   \n";
 print "b) spectral   \n";
@@ -129,22 +131,24 @@ given ($inputset) {
 }
 
 
-# Step 2a of 3: Prompt the user to enter Object ID
+# Step 2b of 3: Prompt the user to enter Object ID
 print 'Enter Object ID: ';
 my $objectid = <STDIN>;
 chomp $objectid;
 
 
-# Step 2b of 3: Prompt the user to enter short description of updated planet parameters
-print 'Enter planet parameter description: ';
+# Step 2c of 3: Prompt the user to enter short description 
+# of updated stellar parameters
+print 'Enter stellar parameter description: ';
 my $description = <STDIN>;
 chomp $description;
 
 
-# Step 2c of 3: Prompt the user to enter a key and corresponding value 
-# (do this in an infinite WHILE-loop; type 'quit' to get out of loop)
+# Step 2d of 3: Prompt the user to enter a stellar parameter 
+# and corresponding value (do this in an infinite WHILE-loop; 
+# type 'quit' to get out of loop)
 while (1) {
-    print 'Enter key and value pair (separated by a space); enter \'quit\' to exit) =>';
+    print 'Enter stellar parameter and value pair (separated by a space); enter \'quit\' to exit) =>';
     print "\n";
     my $str = <STDIN>;
     chomp $str;
@@ -191,7 +195,7 @@ my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 # note to self: use sprintf, not printf. otherwise using printf will 
 # return 1 because the 1 is the true return value from printf which 
 # gets assigned to $filename after printf has printed the string. 
-my $filename  = sprintf ("ppar_%04d-%02d-%02d-%02d-%02d-%02d.edm", $year+1900,$mon+1,$mday,$hour,$min,$sec);
+my $filename  = sprintf ("spar_%04d-%02d-%02d-%02d-%02d-%02d.edm", $year+1900,$mon+1,$mday,$hour,$min,$sec);
 
 # Step 3c of 3: Create file handle for the output file 
 open (my $fh, '>', $filename) or die "Could not open file '$filename' $!\n";
@@ -213,10 +217,10 @@ printf $fh ("FILENAME:        %s\n", $filename);
 printf $fh ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
 
 # Step 3f of 3: Now output all the planet parameters 
-print "EDMT|star|$objectid|add|";
+print     "EDMT|star|$objectid|add|";
 print $fh "EDMT|star|$objectid|add|";
 while ( my ($key, $value) = each(%$hash_ref) ) {
-    print "$key $value|";
+    print     "$key $value|";
     print $fh "$key $value|";
 }
 print "\n"; # need to use this so the command prompt displays correctly 
