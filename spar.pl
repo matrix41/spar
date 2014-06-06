@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use warnings;
-no warnings qw(uninitialized);
+# no warnings qw(uninitialized);
 use feature qw(switch say); # need this for GIVEN-WHEN block to work
 
 use Tie::IxHash;
@@ -229,7 +229,8 @@ printf $fh ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+
 # Special algorithm check.  If certain specific parameters 
 # are initialized (ie not null), then calculate additional 
 # values for other related parameters. 
-if ( $hash_ref->{ lums } !~ /null/ ) 
+# if ( $hash_ref->{ lums } !~ /null/ ) 
+if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
 {
     $temp = log( $hash_ref->{ lums } ) / log(10);
     $hash_ref->{ lum } = sprintf("%.3f", $temp);
@@ -237,20 +238,28 @@ if ( $hash_ref->{ lums } !~ /null/ )
 #    print "\n";
 }
 
-if ( ($hash_ref->{ lumserr1 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
+# if ( ($hash_ref->{ lumserr1 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
+if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } ne '' ) 
 {
-    $temp1 = ( log( $hash_ref->{ lums } + abs( $hash_ref->{ lumserr1 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
-    $hash_ref->{ lumerr1 } = sprintf("%.3f", $temp1);
-#    print "lumserr1 = ", $hash_ref->{ lumserr1 }, " and lumerr1 = ", $hash_ref->{ lumerr1 };
-#    print "\n";
+    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
+    {
+        $temp1 = ( log( $hash_ref->{ lums } + abs( $hash_ref->{ lumserr1 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
+        $hash_ref->{ lumerr1 } = sprintf("%.3f", $temp1);
+#        print "lumserr1 = ", $hash_ref->{ lumserr1 }, " and lumerr1 = ", $hash_ref->{ lumerr1 };
+#        print "\n";
+    }
 }
 
-if ( ($hash_ref->{ lumserr2 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
+# if ( ($hash_ref->{ lumserr2 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
+if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } ne '' ) 
 {
-    $temp2 = ( log( $hash_ref->{ lums } - abs( $hash_ref->{ lumserr2 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
-    $hash_ref->{ lumerr2 } = sprintf("%.3f", $temp2);
-#    print "lumserr2 = ", $hash_ref->{ lumserr2 }, " and lumerr2 = ", $hash_ref->{ lumerr2 };
-#    print "\n";
+    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
+    {
+        $temp2 = ( log( $hash_ref->{ lums } - abs( $hash_ref->{ lumserr2 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
+        $hash_ref->{ lumerr2 } = sprintf("%.3f", $temp2);
+#        print "lumserr2 = ", $hash_ref->{ lumserr2 }, " and lumerr2 = ", $hash_ref->{ lumerr2 };
+#        print "\n";
+    }
 }
 
 
