@@ -133,6 +133,46 @@ my $description = <STDIN>;
 chomp $description;
 
 
+# Step 3 of 3: Print the hash function out to a file in the correct format 
+
+# Step 3a of 3: Parse time and date 
+# sec,     # seconds of minutes from 0 to 61
+# min,     # minutes of hour from 0 to 59
+# hour,    # hours of day from 0 to 24
+# mday,    # day of month from 1 to 31
+# mon,     # month of year from 0 to 11
+# year,    # year since 1900
+# wday,    # days since sunday
+# yday,    # days since January 1st
+# isdst    # hours of daylight savings time
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+
+# Step 3b of 3: Create output filename from time and date elements 
+# note to self: use sprintf, not printf. otherwise using printf will 
+# return 1 because the 1 is the true return value from printf which 
+# gets assigned to $filename after printf has printed the string. 
+# my $filename  = sprintf ("spar_%04d-%02d-%02d-%02d-%02d-%02d.edm", $year+1900,$mon+1,$mday,$hour,$min,$sec);
+
+# Step 3c of 3: Create file handle for the output file 
+open (my $fh, '>', $filename) or die "Could not open file '$filename' $!\n";
+
+# Step 3d of 3: Print header information to screen 
+print   "USER:            raymond\n";
+print   "BUILD:           6.1\n";
+printf ("DESCRIPTION:     %s\n", $description);
+print   "FILETYPE:        edm\n";
+printf ("FILENAME:        %s\n", $filename);
+printf ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
+
+# Step 3e of 3: Print header information to file 
+print  $fh  "USER:            raymond\n";
+print  $fh  "BUILD:           6.1\n";
+printf $fh ("DESCRIPTION:     %s\n", $description);
+print  $fh  "FILETYPE:        edm\n";
+printf $fh ("FILENAME:        %s\n", $filename);
+printf $fh ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
+
+
 # Step 2a of 3: Prompt the user to select the stellar parameter set
 print "Select the stellar parameter set (a-f): \n";
 print "a) parallax   \n";
@@ -186,45 +226,6 @@ while (1) {
     }
 } # end of infinite outer WHILE-loop
 
-
-# Step 3 of 3: Print the hash function out to a file in the correct format 
-
-# Step 3a of 3: Parse time and date 
-# sec,     # seconds of minutes from 0 to 61
-# min,     # minutes of hour from 0 to 59
-# hour,    # hours of day from 0 to 24
-# mday,    # day of month from 1 to 31
-# mon,     # month of year from 0 to 11
-# year,    # year since 1900
-# wday,    # days since sunday
-# yday,    # days since January 1st
-# isdst    # hours of daylight savings time
-my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
-
-# Step 3b of 3: Create output filename from time and date elements 
-# note to self: use sprintf, not printf. otherwise using printf will 
-# return 1 because the 1 is the true return value from printf which 
-# gets assigned to $filename after printf has printed the string. 
-# my $filename  = sprintf ("spar_%04d-%02d-%02d-%02d-%02d-%02d.edm", $year+1900,$mon+1,$mday,$hour,$min,$sec);
-
-# Step 3c of 3: Create file handle for the output file 
-open (my $fh, '>', $filename) or die "Could not open file '$filename' $!\n";
-
-# Step 3d of 3: Print header information to screen 
-print   "USER:            raymond\n";
-print   "BUILD:           6.1\n";
-printf ("DESCRIPTION:     %s\n", $description);
-print   "FILETYPE:        edm\n";
-printf ("FILENAME:        %s\n", $filename);
-printf ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
-
-# Step 3e of 3: Print header information to file 
-print  $fh  "USER:            raymond\n";
-print  $fh  "BUILD:           6.1\n";
-printf $fh ("DESCRIPTION:     %s\n", $description);
-print  $fh  "FILETYPE:        edm\n";
-printf $fh ("FILENAME:        %s\n", $filename);
-printf $fh ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
 
 # Special algorithm check.  If certain specific parameters 
 # are initialized (ie not null), then calculate additional 
