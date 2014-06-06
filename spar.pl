@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use warnings;
+no warnings qw(uninitialized);
 use feature qw(switch say); # need this for GIVEN-WHEN block to work
 
 use Tie::IxHash;
@@ -15,8 +16,6 @@ my $inputset;
 my $temp;
 my $temp1;
 my $temp2;
-my $temp2b;
-my $temp2c;
 
 
 # Step 1a of 3: Tie the hashes (ie to preserve insertion order)
@@ -142,14 +141,20 @@ my $objectid = <STDIN>;
 chomp $objectid;
 
 
-# Step 2c of 3: Prompt the user to enter short description 
+# Step 2c of 3: Prompt the user to pick a filename
+print 'Create name of output file: ';
+my $filename = <STDIN>;
+chomp $filename;
+
+
+# Step 2d of 3: Prompt the user to enter short description 
 # of updated stellar parameters
 print 'Enter stellar parameter description: ';
 my $description = <STDIN>;
 chomp $description;
 
 
-# Step 2d of 3: Prompt the user to enter a stellar parameter 
+# Step 2e of 3: Prompt the user to enter a stellar parameter 
 # and corresponding value (do this in an infinite WHILE-loop; 
 # type 'quit' to get out of loop)
 while (1) {
@@ -200,7 +205,7 @@ my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 # note to self: use sprintf, not printf. otherwise using printf will 
 # return 1 because the 1 is the true return value from printf which 
 # gets assigned to $filename after printf has printed the string. 
-my $filename  = sprintf ("spar_%04d-%02d-%02d-%02d-%02d-%02d.edm", $year+1900,$mon+1,$mday,$hour,$min,$sec);
+# my $filename  = sprintf ("spar_%04d-%02d-%02d-%02d-%02d-%02d.edm", $year+1900,$mon+1,$mday,$hour,$min,$sec);
 
 # Step 3c of 3: Create file handle for the output file 
 open (my $fh, '>', $filename) or die "Could not open file '$filename' $!\n";
