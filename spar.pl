@@ -114,6 +114,25 @@ $photometry{photband} = 'null';
 $photometry{photrefid} = 'null';
 
 
+# Step 2b of 3: Prompt the user to enter Object ID
+print 'Enter Object ID: ';
+my $objectid = <STDIN>;
+chomp $objectid;
+
+
+# Step 2c of 3: Prompt the user to pick a filename
+print 'Create name of output file: ';
+my $filename = <STDIN>;
+chomp $filename;
+
+
+# Step 2d of 3: Prompt the user to enter short description 
+# of updated stellar parameters
+print 'Enter stellar parameter description: ';
+my $description = <STDIN>;
+chomp $description;
+
+
 # Step 2a of 3: Prompt the user to select the stellar parameter set
 print "Select the stellar parameter set (a-f): \n";
 print "a) parallax   \n";
@@ -133,25 +152,6 @@ given ($inputset) {
    when ('f') { $hash_ref = \%photometry}
    default    { die "\n\nNo matching case\n" }
 }
-
-
-# Step 2b of 3: Prompt the user to enter Object ID
-print 'Enter Object ID: ';
-my $objectid = <STDIN>;
-chomp $objectid;
-
-
-# Step 2c of 3: Prompt the user to pick a filename
-print 'Create name of output file: ';
-my $filename = <STDIN>;
-chomp $filename;
-
-
-# Step 2d of 3: Prompt the user to enter short description 
-# of updated stellar parameters
-print 'Enter stellar parameter description: ';
-my $description = <STDIN>;
-chomp $description;
 
 
 # Step 2e of 3: Prompt the user to enter a stellar parameter 
