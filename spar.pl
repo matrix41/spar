@@ -1,11 +1,8 @@
 #!/usr/bin/perl -w
 use strict;
 use warnings;
-# no warnings qw(uninitialized);
 use feature qw(switch say); # need this for GIVEN-WHEN block to work
-
 use Tie::IxHash;
-use 5.16.0;
 
 # Define 
 my $inputkey;
@@ -200,8 +197,7 @@ given ($inputset) {
 # and corresponding value (do this in an infinite WHILE-loop; 
 # type 'quit' to get out of loop)
 while (1) {
-    print 'Enter stellar parameter and value pair (separated by a space); enter \'quit\' to exit) =>';
-    print "\n";
+    print 'Enter stellar parameter and value pair (separated by a space); enter \'quit\' to exit) => ';
     my $str = <STDIN>;
     chomp $str;
     ( $inputkey, $inputvalue ) = split / /, $str;
@@ -272,6 +268,76 @@ if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } !~ /^null$/ )
 
 
 # Step 3f of 3: Now output all the planet parameters 
+#given ($inputset) {
+#   when ('a') { $hash_ref = \%parallax  }
+#   when ('b') { $hash_ref = \%spectral  }
+#   when ('c') { $hash_ref = \%vsini     }
+#   when ('d') { $hash_ref = \%rv        }
+#   when ('e') { $hash_ref = \%spar      }
+#   when ('f') { $hash_ref = \%photometry}
+#   default    { die "\n\nNo matching case\n" }
+#}
+
+if ( $hash_ref == \%parallax ) 
+{
+    print     "#\n";
+    print     "# Addition of Parallax/Distance information\n";
+    print     "#\n";
+    print $fh "#\n";
+    print $fh "# Addition of Parallax/Distance information\n";
+    print $fh "#\n";
+}
+
+if ( $hash_ref == \%spectral ) 
+{
+    print     "#\n";
+    print     "# Addition of Spectral Type information\n";
+    print     "#\n";
+    print $fh "#\n";
+    print $fh "# Addition of Spectral Type information\n";
+    print $fh "#\n";
+}
+
+if ( $hash_ref == \%vsini ) 
+{
+    print     "#\n";
+    print     "# Addition of V sin (i) information\n";
+    print     "#\n";
+    print $fh "#\n";
+    print $fh "# Addition of V sin (i) information\n";
+    print $fh "#\n";
+}
+
+if ( $hash_ref == \%rv ) 
+{
+    print     "#\n";
+    print     "# Addition of Radial Velocity information\n";
+    print     "#\n";
+    print $fh "#\n";
+    print $fh "# Addition of Radial Velocity information\n";
+    print $fh "#\n";
+}
+
+if ( $hash_ref == \%spar ) 
+{
+    print     "#\n";
+    print     "# Addition of Basic Stellar Parameters information\n";
+    print     "#\n";
+    print $fh "#\n";
+    print $fh "# Addition of Basic Stellar Parameters information\n";
+    print $fh "#\n";
+}
+
+if ( $hash_ref == \%photometry ) 
+{
+    print     "#\n";
+    print     "# Addition of default photometry values\n";
+    print     "#\n";
+    print $fh "#\n";
+    print $fh "# Addition of default photometry values\n";
+    print $fh "#\n";
+}
+
 print     "EDMT|star|$objectid|add|";
 print $fh "EDMT|star|$objectid|add|";
 while ( my ($key, $value) = each(%$hash_ref) ) {
@@ -279,9 +345,10 @@ while ( my ($key, $value) = each(%$hash_ref) ) {
     print $fh "$key $value|";
 }
 print "\n"; # need to use this so the command prompt displays correctly 
+print $fh "\n";
 
 
-print "Enter parameter values for a different parameter set (y/n)?\n";
+print "\nEnter parameter values for a different parameter set (y/n)?\n";
 my $choice = <STDIN>;
 chomp $choice;
 if ( $choice =~ /^y$/ ) 
