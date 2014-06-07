@@ -5,6 +5,7 @@ use warnings;
 use feature qw(switch say); # need this for GIVEN-WHEN block to work
 
 use Tie::IxHash;
+use 5.16.0;
 
 # Define 
 my $inputkey;
@@ -173,6 +174,7 @@ printf $fh ("FILENAME:        %s\n", $filename);
 printf $fh ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
 
 
+START:
 # Step 2a of 3: Prompt the user to select the stellar parameter set
 print "Select the stellar parameter set (a-f): \n";
 print "a) parallax   \n";
@@ -231,7 +233,8 @@ while (1) {
 # are initialized (ie not null), then calculate additional 
 # values for other related parameters. 
 # if ( $hash_ref->{ lums } !~ /null/ ) 
-if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
+# if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
+if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
 {
     $temp = log( $hash_ref->{ lums } ) / log(10);
     $hash_ref->{ lum } = sprintf("%.3f", $temp);
@@ -240,9 +243,11 @@ if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' )
 }
 
 # if ( ($hash_ref->{ lumserr1 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
-if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } ne '' ) 
+# if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } ne '' ) 
+if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } !~ /^null$/ ) 
 {
-    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
+#    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
+    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
     {
         $temp1 = ( log( $hash_ref->{ lums } + abs( $hash_ref->{ lumserr1 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
         $hash_ref->{ lumerr1 } = sprintf("%.3f", $temp1);
@@ -252,9 +257,11 @@ if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } ne '' )
 }
 
 # if ( ($hash_ref->{ lumserr2 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
-if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } ne '' ) 
+# if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } ne '' ) 
+if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } !~ /^null$/ ) 
 {
-    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
+#     if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
+    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
     {
         $temp2 = ( log( $hash_ref->{ lums } - abs( $hash_ref->{ lumserr2 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
         $hash_ref->{ lumerr2 } = sprintf("%.3f", $temp2);
@@ -273,5 +280,12 @@ while ( my ($key, $value) = each(%$hash_ref) ) {
 }
 print "\n"; # need to use this so the command prompt displays correctly 
 
-exit 0
 
+print "Enter parameter values for a different parameter set (y/n)?\n";
+my $choice = <STDIN>;
+chomp $choice;
+if ( $choice =~ /^y$/ ) 
+{
+    goto START;
+}
+exit 0
