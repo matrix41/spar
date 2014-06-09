@@ -16,7 +16,7 @@ my $temp1;
 my $temp2;
 
 
-# Step 1a of 3: Tie the hashes (ie to preserve insertion order)
+# Step 1a of 4: Tie the hashes (ie to preserve insertion order)
 # note to self: awk '{printf "$parallax{%s} = \x27null\x27;\n", $1}' star01.input
 # note to self: awk '{printf "$spectral{%s} = \x27null\x27;\n", $1}' star02.input
 # note to self: awk '{printf "$vsini{%s} = \x27null\x27;\n", $1}' star03.input
@@ -31,7 +31,7 @@ tie my %spar, "Tie::IxHash" or die "could not tie %hash";
 tie my %photometry, "Tie::IxHash" or die "could not tie %photometry";
 
 
-# Step 1b of 3: Initialize the hashes
+# Step 1b of 4: Initialize the hashes
 $parallax{plx} = 'null';
 $parallax{plxerr1} = 'null';
 $parallax{plxerr2} = 'null';
@@ -112,28 +112,28 @@ $photometry{photband} = 'null';
 $photometry{photrefid} = 'null';
 
 
-# Step 2b of 3: Prompt the user to enter Object ID
+# Step 2a of 4: Prompt the user to enter Object ID
 print 'Enter Object ID: ';
 my $objectid = <STDIN>;
 chomp $objectid;
 
 
-# Step 2c of 3: Prompt the user to pick a filename
+# Step 2b of 4: Prompt the user to pick a filename
 print 'Create name of output file: ';
 my $filename = <STDIN>;
 chomp $filename;
 
 
-# Step 2d of 3: Prompt the user to enter short description 
+# Step 2c of 4: Prompt the user to enter short description 
 # of updated stellar parameters
 print 'Enter stellar parameter description: ';
 my $description = <STDIN>;
 chomp $description;
 
 
-# Step 3 of 3: Print the hash function out to a file in the correct format 
+# Step 3 of 4: Print the hash function out to a file in the correct format 
 
-# Step 3a of 3: Parse time and date 
+# Step 3a of 4: Parse time and date 
 # sec,     # seconds of minutes from 0 to 61
 # min,     # minutes of hour from 0 to 59
 # hour,    # hours of day from 0 to 24
@@ -145,16 +145,16 @@ chomp $description;
 # isdst    # hours of daylight savings time
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 
-# Step 3b of 3: Create output filename from time and date elements 
+# Step 3b of 4: Create output filename from time and date elements 
 # note to self: use sprintf, not printf. otherwise using printf will 
 # return 1 because the 1 is the true return value from printf which 
 # gets assigned to $filename after printf has printed the string. 
 # my $filename  = sprintf ("spar_%04d-%02d-%02d-%02d-%02d-%02d.edm", $year+1900,$mon+1,$mday,$hour,$min,$sec);
 
-# Step 3c of 3: Create file handle for the output file 
+# Step 3c of 4: Create file handle for the output file 
 open (my $fh, '>', $filename) or die "Could not open file '$filename' $!\n";
 
-# Step 3d of 3: Print header information to screen 
+# Step 3d of 4: Print header information to screen 
 print   "USER:            raymond\n";
 print   "BUILD:           6.1\n";
 printf ("DESCRIPTION:     %s\n", $description);
@@ -162,7 +162,7 @@ print   "FILETYPE:        edm\n";
 printf ("FILENAME:        %s\n", $filename);
 printf ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
 
-# Step 3e of 3: Print header information to file 
+# Step 3e of 4: Print header information to file 
 print  $fh  "USER:            raymond\n";
 print  $fh  "BUILD:           6.1\n";
 printf $fh ("DESCRIPTION:     %s\n", $description);
@@ -172,7 +172,7 @@ printf $fh ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+
 
 
 START:
-# Step 2a of 3: Prompt the user to select the stellar parameter set
+# Step 4a of 4: Prompt the user to select the stellar parameter set
 print "Select the stellar parameter set (a-f): \n";
 print "a) parallax   \n";
 print "b) spectral   \n";
@@ -193,7 +193,7 @@ given ($inputset) {
 }
 
 
-# Step 2e of 3: Prompt the user to enter a stellar parameter 
+# Step 4b of 4: Prompt the user to enter a stellar parameter 
 # and corresponding value (do this in an infinite WHILE-loop; 
 # type 'quit' to get out of loop)
 while (1) {
@@ -205,7 +205,7 @@ while (1) {
         last;
     }
 
-# Error checking.  Make sure the user-input key (inputkey) 
+# Step 4c of 4: Error checking.  Make sure the user-input key (inputkey) 
 # matches parameter keys in the hash function.  Use WHILE-loop 
 # to iterate through the entire hash function. 
     my $match = 0; # this variable flag tracks the matching status
@@ -225,7 +225,7 @@ while (1) {
 } # end of infinite outer WHILE-loop
 
 
-# Special algorithm check.  If certain specific parameters 
+# Step 4d of 4: Special algorithm check.  If certain specific parameters 
 # are initialized (ie not null), then calculate additional 
 # values for other related parameters. 
 # if ( $hash_ref->{ lums } !~ /null/ ) 
@@ -267,17 +267,7 @@ if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } !~ /^null$/ )
 }
 
 
-# Step 3f of 3: Now output all the planet parameters 
-#given ($inputset) {
-#   when ('a') { $hash_ref = \%parallax  }
-#   when ('b') { $hash_ref = \%spectral  }
-#   when ('c') { $hash_ref = \%vsini     }
-#   when ('d') { $hash_ref = \%rv        }
-#   when ('e') { $hash_ref = \%spar      }
-#   when ('f') { $hash_ref = \%photometry}
-#   default    { die "\n\nNo matching case\n" }
-#}
-
+# Step 3e of 4: Apply the correct stellar parameter set header. 
 if ( $hash_ref == \%parallax ) 
 {
     print     "#\n";
@@ -338,6 +328,9 @@ if ( $hash_ref == \%photometry )
     print $fh "#\n";
 }
 
+
+# Step 3f of 4: Print the contents of the current selected 
+# hash to file and to screen. 
 print     "EDMT|star|$objectid|add|";
 print $fh "EDMT|star|$objectid|add|";
 while ( my ($key, $value) = each(%$hash_ref) ) {
@@ -348,6 +341,8 @@ print "\n"; # need to use this so the command prompt displays correctly
 print $fh "\n";
 
 
+# Step 3g of 4: Prompt the user if they wish to enter additional 
+# parameter values for a different parameter set. 
 print "\nEnter parameter values for a different parameter set (y/n)?\n";
 my $choice = <STDIN>;
 chomp $choice;
@@ -356,3 +351,4 @@ if ( $choice =~ /^y$/ )
     goto START;
 }
 exit 0
+
