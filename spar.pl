@@ -229,8 +229,10 @@ while (1) {
 
 
 # Step 4d of 4: Special algorithm check.  If certain specific parameters 
-# are initialized (ie not null), then calculate additional 
+# are initialized (ie not null), then calculate corresponding 
 # values for other related parameters. 
+
+# Algorithm check 1: If lums parameter has a value, then calculate lum parameter.
 # if ( $hash_ref->{ lums } !~ /null/ ) 
 # if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
 if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
@@ -241,6 +243,7 @@ if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ )
 #    print "\n";
 }
 
+# Algorithm check 2: If lumserr1 parameter has a value, then calculate lumerr1 parameter. 
 # if ( ($hash_ref->{ lumserr1 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
 # if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } ne '' ) 
 if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } !~ /^null$/ ) 
@@ -255,6 +258,7 @@ if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } !~ /^null$/ )
     }
 }
 
+# Algorithm check 3: If lumserr2 parameter has a value, then calculate lumerr2 parameter. 
 # if ( ($hash_ref->{ lumserr2 } !~ /null/) && ($hash_ref->{ lums } !~ /null/) ) 
 # if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } ne '' ) 
 if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } !~ /^null$/ ) 
