@@ -15,6 +15,8 @@ my $inputset;
 my $temp;
 my $temp1;
 my $temp2;
+my $temp3;
+my $temp4;
 
 
 # Step 1a of 4: Tie the hashes (ie to preserve insertion order)
@@ -273,6 +275,72 @@ if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } !~ /^null$/ )
     }
 }
 
+# Algorithm check 4: If lum parameter has a value, then calculate lums parameter.
+if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ )
+{
+    $temp = 10**( $hash_ref->{ lum } );
+    if ( $hash_ref->{ lum } > 4 )
+    {
+        $hash_ref->{ lums } = sprintf("%.1e", $temp);
+    }
+    else
+    {
+        $hash_ref->{ lums } = sprintf("%.1f", $temp);
+    }
+    print "Algo check 4: lums = ", $hash_ref->{ lums };
+    print " and lum = ",           $hash_ref->{ lum };
+    print "\n";
+}
+
+# Algorithm check 5: If lumerr1 parameter has a value, then calculate lumserr1 parameter.
+if ( defined $hash_ref->{ lumerr1 } && $hash_ref->{ lumerr1 } !~ /^null$/ )
+{
+    if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ )
+    {
+        $temp1 = $hash_ref->{ lum } + $hash_ref->{ lumerr1 };
+        $temp2 = 10**$temp1;
+        $temp3 = 10**( $hash_ref->{ lum } );
+        $temp4 = $temp2 - $temp3;
+
+        # if ( $hash_ref->{ lum } > 4 )
+        # {
+        #     $hash_ref->{ lumserr1 } = sprintf("%.1e", $temp4);
+        # }
+        # else 
+        # {
+            $hash_ref->{ lumserr1 } = sprintf("%.1f", $temp4);
+        # }
+
+        print "\nlumserr1 = ",   $hash_ref->{ lumserr1 };
+        print " and lumerr1 = ", $hash_ref->{ lumerr1 };
+        print "\n";
+    }
+}
+
+# Algorithm check 6: If lumerr2 parameter has a value, then calculate lumserr2 parameter.
+if ( defined $hash_ref->{ lumerr2 } && $hash_ref->{ lumerr2 } !~ /^null$/ )
+{
+    if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ )
+    {
+        $temp1 = $hash_ref->{ lum } - abs( $hash_ref->{ lumerr2 } );
+        $temp2 = 10**$temp1;
+        $temp3 = 10**( $hash_ref->{ lum } );
+        $temp4 = $temp2 - $temp3;
+
+        # if ( $hash_ref->{ lum } > 4 )
+        # {
+        #     $hash_ref->{ lumserr1 } = sprintf("%.1e", $temp4);
+        # }
+        # else
+        # {
+            $hash_ref->{ lumserr2 } = sprintf("%.1f", $temp4);
+        # }
+
+        print "\nlumserr2 = ",   $hash_ref->{ lumserr2 };
+        print " and lumerr2 = ", $hash_ref->{ lumerr2 };
+        print "\n";
+    }
+}
 
 # Step 3e of 4: Apply the correct stellar parameter set header. 
 if ( $hash_ref == \%parallax ) 
