@@ -129,11 +129,11 @@ my $filename = <STDIN>;
 chomp $filename;
 
 
-# Step 2c of 4: Prompt the user to enter short description 
-# of updated stellar parameters
-print 'Enter stellar parameter description: ';
-my $description = <STDIN>;
-chomp $description;
+# # Step 2c of 4: Prompt the user to enter short description 
+# # of updated stellar parameters
+# print 'Enter stellar parameter description: ';
+# my $description = <STDIN>;
+# chomp $description;
 
 
 # Step 3 of 4: Print the hash function out to a file in the correct format 
@@ -162,7 +162,7 @@ open (my $fh, '>', $filename) or die "Could not open file '$filename' $!\n";
 # Step 3d of 4: Print header information to screen 
 print   "USER:            raymond\n";
 print   "BUILD:           6.1\n";
-printf ("DESCRIPTION:     %s\n", $description);
+print   "DESCRIPTION:     Stellar/Planetary Parameters Additions and Updates\n";
 print   "FILETYPE:        edm\n";
 printf ("FILENAME:        %s\n", $filename);
 printf ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
@@ -170,7 +170,7 @@ printf ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$m
 # Step 3e of 4: Print header information to file 
 print  $fh  "USER:            raymond\n";
 print  $fh  "BUILD:           6.1\n";
-printf $fh ("DESCRIPTION:     %s\n", $description);
+print  $fh  "DESCRIPTION:     Stellar/Planetary Parameters Additions and Updates\n";
 print  $fh  "FILETYPE:        edm\n";
 printf $fh ("FILENAME:        %s\n", $filename);
 printf $fh ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$mday,$hour,$min,$sec);
