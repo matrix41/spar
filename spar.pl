@@ -239,8 +239,8 @@ while (1) {
 # if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
 if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
 {
-    my $howmanyA = length( $hash_ref->{ lums } );
-    my $howmanyB = length( int( $hash_ref->{ lums } ) );
+    my $howmanyA = length( abs( $hash_ref->{ lums } ) );
+    my $howmanyB = length( abs( int( $hash_ref->{ lums } ) ) );
     my $sigdig = $howmanyA - $howmanyB - 1;
     $temp = log( $hash_ref->{ lums } ) / log(10);
     $hash_ref->{ lum } = sprintf("%.${sigdig}f", $temp);
@@ -256,8 +256,8 @@ if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } !~ /^null$/ )
 #    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
     if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
     {
-        my $howmanyA = length( $hash_ref->{ lumserr1 } );
-        my $howmanyB = length( int( $hash_ref->{ lumserr1 } ) );
+        my $howmanyA = length( abs( $hash_ref->{ lumserr1 } ) );
+        my $howmanyB = length( abs( int( $hash_ref->{ lumserr1 } ) ) );
         my $sigdig = $howmanyA - $howmanyB - 1;
         $temp1 = ( log( $hash_ref->{ lums } + abs( $hash_ref->{ lumserr1 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
         $hash_ref->{ lumerr1 } = sprintf("%.${sigdig}f", $temp1);
@@ -274,8 +274,8 @@ if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } !~ /^null$/ )
 #     if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
     if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
     {
-        my $howmanyA = length( $hash_ref->{ lumserr2 } );
-        my $howmanyB = length( int( $hash_ref->{ lumserr2 } ) );
+        my $howmanyA = length( abs( $hash_ref->{ lumserr2 } ) );
+        my $howmanyB = length( abs( int( $hash_ref->{ lumserr2 } ) ) );
         my $sigdig = $howmanyA - $howmanyB - 1;
         $temp2 = ( log( $hash_ref->{ lums } - abs( $hash_ref->{ lumserr2 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
         $hash_ref->{ lumerr2 } = sprintf("%.${sigdig}f", $temp2);
@@ -285,10 +285,10 @@ if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } !~ /^null$/ )
 }
 
 # Algorithm check 4: If lum parameter has a value, then calculate lums parameter.
-if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ )
+if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ && $hash_ref->{ lums } =~ /^null$/ )
 {
-    my $howmanyA = length( $hash_ref->{ lum } );
-    my $howmanyB = length( int( $hash_ref->{ lum } ) );
+    my $howmanyA = length( abs( $hash_ref->{ lum } ) );
+    my $howmanyB = length( abs( int( $hash_ref->{ lum } ) ) );
     my $sigdig = $howmanyA - $howmanyB - 1;
     $temp = 10**( $hash_ref->{ lum } );
     if ( $hash_ref->{ lum } > 4 )
@@ -305,12 +305,12 @@ if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ )
 }
 
 # Algorithm check 5: If lumerr1 parameter has a value, then calculate lumserr1 parameter.
-if ( defined $hash_ref->{ lumerr1 } && $hash_ref->{ lumerr1 } !~ /^null$/ )
+if ( defined $hash_ref->{ lumerr1 } && $hash_ref->{ lumerr1 } !~ /^null$/ && $hash_ref->{ lumserr1 } =~ /^null$/ )
 {
     if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ )
     {
-        my $howmanyA = length( $hash_ref->{ lumerr1 } );
-        my $howmanyB = length( int( $hash_ref->{ lumerr1 } ) );
+        my $howmanyA = length( abs( $hash_ref->{ lumserr1 } ) );
+        my $howmanyB = length( abs( int( $hash_ref->{ lumserr1 } ) ) );
         my $sigdig = $howmanyA - $howmanyB - 1;
         $temp1 = $hash_ref->{ lum } + $hash_ref->{ lumerr1 };
         $temp2 = 10**$temp1;
@@ -333,12 +333,14 @@ if ( defined $hash_ref->{ lumerr1 } && $hash_ref->{ lumerr1 } !~ /^null$/ )
 }
 
 # Algorithm check 6: If lumerr2 parameter has a value, then calculate lumserr2 parameter.
-if ( defined $hash_ref->{ lumerr2 } && $hash_ref->{ lumerr2 } !~ /^null$/ )
+if ( defined $hash_ref->{ lumerr2 }  && 
+ $hash_ref->{ lumerr2 }  !~ /^null$/ && 
+ $hash_ref->{ lumserr2 } =~ /^null$/ )
 {
     if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ )
     {
-        my $howmanyA = length( $hash_ref->{ lumerr2 } );
-        my $howmanyB = length( int( $hash_ref->{ lumerr2 } ) );
+        my $howmanyA = length( abs( $hash_ref->{ lumserr2 } ) );
+        my $howmanyB = length( abs( int( $hash_ref->{ lumserr2 } ) ) );
         my $sigdig = $howmanyA - $howmanyB - 1;
         $temp1 = $hash_ref->{ lum } - abs( $hash_ref->{ lumerr2 } );
         $temp2 = 10**$temp1;
