@@ -17,6 +17,8 @@ my $temp1;
 my $temp2;
 my $temp3;
 my $temp4;
+my $spectypeA;
+my $spectypeB;
 
 
 # Step 1a of 4: Tie the hashes (ie to preserve insertion order)
@@ -197,7 +199,6 @@ given ($inputset) {
    default    { die "\n\nNo matching case\n" }
 }
 
-
 # Step 4b of 4: Prompt the user to enter a stellar parameter 
 # and corresponding value (do this in an infinite WHILE-loop; 
 # type 'quit' to get out of loop)
@@ -206,6 +207,13 @@ while (1) {
     my $str = <STDIN>;
     chomp $str;
     ( $inputkey, $inputvalue ) = split / /, $str;
+# This IF-block will handle the case when a spectral type is entered by the user. 
+# (A spectral type consists of two parts, thus the need for special handling here.)
+    if ( $inputkey =~ /^sptstr$/ )
+    {
+      ( $inputkey, $spectypeA, $spectypeB ) = split / /, $str;
+      $inputvalue = $spectypeA . " " . $spectypeB;
+    }
     if ($inputkey eq 'quit') {
         last;
     }
