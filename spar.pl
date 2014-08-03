@@ -209,7 +209,8 @@ while (1) {
     ( $inputkey, $inputvalue ) = split / /, $str;
 # This IF-block will handle the case when a spectral type is entered by the user. 
 # (A spectral type consists of two parts, thus the need for special handling here.)
-    if ( $inputkey =~ /^sptstr$/ )
+# ( 8/2/2014: The code was modified to also handle photband )
+    if ( ( $inputkey =~ /^sptstr$/ ) || ( $inputkey =~ /^photband$/ ) )
     {
       ( $inputkey, $spectypeA, $spectypeB ) = split / /, $str;
       $inputvalue = $spectypeA . " " . $spectypeB;
