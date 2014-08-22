@@ -366,6 +366,42 @@ if ( defined $hash_ref->{ lumerr2 }  &&
     }
 }
 
+
+my @messageArray; # this array will hold all the messages indicating which 
+                  # parameter fields were auto-filled. 
+
+# Special autofill algorithm.  The limit flag for the corresponding parameter 
+# field in array @myNames will be auto-filled with "0" if that parameter field 
+# is not null. 
+my @myNames = ('mass', 'age', 'rad', 'met', 'teff', 'logg', 'density');
+foreach (@myNames) 
+{
+# This IF-block will check 1.) that the parameter field has been filled by a real 
+# number (e.g. no longer null), and 2.) whether or not the corresponding limit flag 
+# is still null.  If the limit flag is still null, then that means I forgot to set 
+# it and the algorithm will automatically set it for me.  
+  if  ( defined( $hash_ref->{ $_ } ) &&     # this is to account for 'Use of uninitialized value in pattern match' warning 
+       $hash_ref->{ $_ } !~ /^null$/ &&     # this checks if the parameter was assigned a value 
+       $hash_ref->{ $_.'lim' } =~ /^null$/  # this checks if the limit flag was set (or not set) by me 
+      )
+  {
+    $hash_ref->{ $_.'lim' } = 0; # sets the limit flag to 0 
+    my $tempname = "$_".'lim';
+#    print "\n$tempname was autofilled with 0\n";
+    push( @messageArray, "$tempname was autofilled with 0" );
+  }  # end of IF block 
+} # end of FOREACH loop 
+
+
+# Special autofill algorithm 1: Autofill sparblend
+if ( defined( $hash_ref->{ sparblend } ) && $hash_ref->{ sparblend } =~ /^null$/ )
+{
+  $hash_ref->{ sparblend } = 0;
+#  print "\nsparblend was autofilled with 0\n";
+  push( @messageArray, "sparblend was autofilled with 0" );
+}
+
+
 # Step 3e of 4: Apply the correct stellar parameter set header. 
 if ( $hash_ref == \%parallax ) 
 {
@@ -440,7 +476,16 @@ print "\n"; # need to use this so the command prompt displays correctly
 print $fh "\n";
 
 
-# Step 3g of 4: Prompt the user if they wish to enter additional 
+# Step 3g of 3: Print all the messages for the fields that were autofilled. 
+print "\n\n";
+for ( my $i = 0 ; $i <= $#messageArray ; $i++ )
+{
+  print "$messageArray[$i]\n";
+}
+print "\n\n";
+
+
+# Step 3h of 4: Prompt the user if they wish to enter additional 
 # parameter values for a different parameter set. 
 print "\nEnter parameter values for a different parameter set (y/n)?\n";
 my $choice = <STDIN>;
