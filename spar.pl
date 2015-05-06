@@ -163,7 +163,7 @@ open (my $fh, '>', $filename) or die "Could not open file '$filename' $!\n";
 
 # Step 3d of 4: Print header information to screen 
 print   "USER:            raymond\n";
-print   "BUILD:           6.1\n";
+print   "BUILD:           6.2\n";
 print   "DESCRIPTION:     Stellar/Planetary Parameters Additions and Updates\n";
 print   "FILETYPE:        edm\n";
 printf ("FILENAME:        %s\n", $filename);
@@ -171,7 +171,7 @@ printf ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$m
 
 # Step 3e of 4: Print header information to file 
 print  $fh  "USER:            raymond\n";
-print  $fh  "BUILD:           6.1\n";
+print  $fh  "BUILD:           6.2\n";
 print  $fh  "DESCRIPTION:     Stellar/Planetary Parameters Additions and Updates\n";
 print  $fh  "FILETYPE:        edm\n";
 printf $fh ("FILENAME:        %s\n", $filename);
@@ -241,130 +241,8 @@ while (1) {
 # Step 4d of 4: Special algorithm check.  If certain specific parameters 
 # are initialized (ie not null), then calculate corresponding 
 # values for other related parameters. 
-
-# Algorithm check 1: If lums parameter has a value, then calculate lum parameter.
-if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
-{
-    my $howmanyA = length( $hash_ref->{ lums } );
-    my $howmanyB = length( int( $hash_ref->{ lums } ) );
-    my $sigdig = $howmanyA - $howmanyB - 1;
-    $temp = log( $hash_ref->{ lums } ) / log(10);
-    $hash_ref->{ lum } = sprintf("%.${sigdig}f", $temp);
-#    print "lums = ", $hash_ref->{ lums }, " and lum = ", $hash_ref->{ lum };
-#    print "\n";
-}
-
-# Algorithm check 2: If lumserr1 parameter has a value, then calculate lumerr1 parameter. 
-if ( defined $hash_ref->{ lumserr1 } && $hash_ref->{ lumserr1 } !~ /^null$/ ) 
-{
-#    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
-    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
-    {
-        my $howmanyA = length( $hash_ref->{ lumserr1 } );
-        my $howmanyB = length( int( $hash_ref->{ lumserr1 } ) );
-        my $sigdig = $howmanyA - $howmanyB - 1;
-        $temp1 = ( log( $hash_ref->{ lums } + abs( $hash_ref->{ lumserr1 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
-        $hash_ref->{ lumerr1 } = sprintf("%.${sigdig}f", $temp1);
-#        print "lumserr1 = ", $hash_ref->{ lumserr1 }, " and lumerr1 = ", $hash_ref->{ lumerr1 };
-#        print "\n";
-    }
-}
-
-# Algorithm check 3: If lumserr2 parameter has a value, then calculate lumerr2 parameter. 
-if ( defined $hash_ref->{ lumserr2 } && $hash_ref->{ lumserr2 } !~ /^null$/ ) 
-{
-#     if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } ne '' ) 
-    if ( defined $hash_ref->{ lums } && $hash_ref->{ lums } !~ /^null$/ ) 
-    {
-        my $howmanyA = length( $hash_ref->{ lumserr2 } );
-        my $howmanyB = length( int( abs( $hash_ref->{ lumserr2 } ) ) );
-        my $sigdig = $howmanyA - $howmanyB - 2;
-        $temp2 = ( log( $hash_ref->{ lums } - abs( $hash_ref->{ lumserr2 } ) ) - log( $hash_ref->{ lums } ) ) / log(10);
-        $hash_ref->{ lumerr2 } = sprintf("%.${sigdig}f", $temp2);
-#        print "lumserr2 = ", $hash_ref->{ lumserr2 }, " and lumerr2 = ", $hash_ref->{ lumerr2 };
-#        print "\n";
-    }
-}
-
-# Algorithm check 4: If lum parameter has a value, then calculate lums parameter.
-if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ && $hash_ref->{ lums } =~ /^null$/ )
-{
-    my $howmanyA = length( $hash_ref->{ lum } );
-    my $howmanyB = length( int( $hash_ref->{ lum } ) );
-    my $sigdig = $howmanyA - $howmanyB - 1;
-    $temp = 10**( $hash_ref->{ lum } );
-    if ( $hash_ref->{ lum } > 4 )
-    {
-        $hash_ref->{ lums } = sprintf("%.${sigdig}e", $temp);
-    }
-    else
-    {
-        $hash_ref->{ lums } = sprintf("%.${sigdig}f", $temp);
-    }
-    print "Algo check 4: lums = ", $hash_ref->{ lums };
-    print " and lum = ",           $hash_ref->{ lum };
-    print "\n";
-}
-
-# Algorithm check 5: If lumerr1 parameter has a value, then calculate lumserr1 parameter.
-if ( defined $hash_ref->{ lumerr1 } && 
- $hash_ref->{ lumerr1 } !~ /^null$/ && 
- $hash_ref->{ lumserr1 } =~ /^null$/ )
-{
-    if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ )
-    {
-        my $howmanyA = length( $hash_ref->{ lumerr1 } );
-        my $howmanyB = length( int( $hash_ref->{ lumerr1 } ) );
-        my $sigdig = $howmanyA - $howmanyB - 1;
-        $temp1 = $hash_ref->{ lum } + $hash_ref->{ lumerr1 };
-        $temp2 = 10**$temp1;
-        $temp3 = 10**( $hash_ref->{ lum } );
-        $temp4 = $temp2 - $temp3;
-
-        # if ( $hash_ref->{ lum } > 4 )
-        # {
-        #     $hash_ref->{ lumserr1 } = sprintf("%.1e", $temp4);
-        # }
-        # else 
-        # {
-            $hash_ref->{ lumserr1 } = sprintf("%.${sigdig}f", $temp4);
-        # }
-
-        print "\nlumserr1 = ",   $hash_ref->{ lumserr1 };
-        print " and lumerr1 = ", $hash_ref->{ lumerr1 };
-        print "\n";
-    }
-}
-
-# Algorithm check 6: If lumerr2 parameter has a value, then calculate lumserr2 parameter.
-if ( defined $hash_ref->{ lumerr2 }  && 
- $hash_ref->{ lumerr2 }  !~ /^null$/ && 
- $hash_ref->{ lumserr2 } =~ /^null$/ )
-{
-    if ( defined $hash_ref->{ lum } && $hash_ref->{ lum } !~ /^null$/ )
-    {
-        my $howmanyA = length( $hash_ref->{ lumerr2 } );
-        my $howmanyB = length( int( abs( $hash_ref->{ lumerr2 } ) ) );
-        my $sigdig = $howmanyA - $howmanyB - 2;
-        $temp1 = $hash_ref->{ lum } - abs( $hash_ref->{ lumerr2 } );
-        $temp2 = 10**$temp1;
-        $temp3 = 10**( $hash_ref->{ lum } );
-        $temp4 = $temp2 - $temp3;
-
-        # if ( $hash_ref->{ lum } > 4 )
-        # {
-        #     $hash_ref->{ lumserr1 } = sprintf("%.1e", $temp4);
-        # }
-        # else
-        # {
-            $hash_ref->{ lumserr2 } = sprintf("%.${sigdig}f", $temp4);
-        # }
-
-        print "\nlumserr2 = ",   $hash_ref->{ lumserr2 };
-        print " and lumerr2 = ", $hash_ref->{ lumerr2 };
-        print "\n";
-    }
-}
+# (5/6/2015) UPDATE : All the algorithms for auto-calculating lum or lums 
+# were deleted because Solange's new Build 6.2 will now do the auto-calc.  
 
 
 my @messageArray; # this array will hold all the messages indicating which 
