@@ -138,6 +138,12 @@ chomp $filename;
 # chomp $description;
 
 
+# Step 2d of 4: Prompt the user to enter an entry method 
+print 'Enter entry method ( add / update / add_def / update_def ): ';
+my $addupdate = <STDIN>;
+chomp $addupdate;
+
+
 # Step 3 of 4: Print the hash function out to a file in the correct format 
 
 # Step 3a of 4: Parse time and date 
@@ -344,8 +350,8 @@ if ( $hash_ref == \%photometry )
 
 # Step 3f of 4: Print the contents of the current selected 
 # hash to file and to screen. 
-print     "EDMT|star|$objectid|add|";
-print $fh "EDMT|star|$objectid|add|";
+print     "EDMT|star|$objectid|$addupdate|";
+print $fh "EDMT|star|$objectid|$addupdate|";
 while ( my ($key, $value) = each(%$hash_ref) ) {
     print     "$key $value|";
     print $fh "$key $value|";
