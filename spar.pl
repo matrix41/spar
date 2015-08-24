@@ -119,11 +119,10 @@ $photometry{photrefid} = 'null';
 
 
 # Step 2a of 4: Prompt the user to enter Object ID
-do {
-    print 'Enter Object ID: ';
-    $objectid = <STDIN>;
-    chomp $objectid;
-} while ( $objectid !~ /\d\d\d\d\d\d\d\d/ );
+# Step 2a of 3: Prompt the user to enter Object ID
+print 'Enter Object ID: ';
+my $objectid = <STDIN>;
+chomp $objectid;
 
 
 # Step 2b of 4: Prompt the user to pick a filename
