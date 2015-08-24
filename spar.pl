@@ -6,6 +6,8 @@ use Tie::IxHash;
 
 # Define 
 my $objectid;
+my $filename; 
+my $addupdate; 
 my $inputkey;
 my $key;
 my $inputvalue;
@@ -121,13 +123,13 @@ $photometry{photrefid} = 'null';
 # Step 2a of 4: Prompt the user to enter Object ID
 # Step 2a of 3: Prompt the user to enter Object ID
 print 'Enter Object ID: ';
-my $objectid = <STDIN>;
+$objectid = <STDIN>;
 chomp $objectid;
 
 
 # Step 2b of 4: Prompt the user to pick a filename
 print 'Create name of output file: ';
-my $filename = <STDIN>;
+$filename = <STDIN>;
 chomp $filename;
 
 
@@ -140,7 +142,7 @@ chomp $filename;
 
 # Step 2d of 4: Prompt the user to enter an entry method 
 print 'Enter entry method ( add / update / add_def / update_def ): ';
-my $addupdate = <STDIN>;
+$addupdate = <STDIN>;
 chomp $addupdate;
 
 
