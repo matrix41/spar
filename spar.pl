@@ -171,7 +171,7 @@ open (my $fh, '>', $filename) or die "Could not open file '$filename' $!\n";
 
 # Step 3d of 4: Print header information to screen 
 print   "USER:            raymond\n";
-print   "BUILD:           6.2\n";
+print   "BUILD:           6.3\n";
 print   "DESCRIPTION:     Stellar/Planetary Parameters Additions and Updates\n";
 print   "FILETYPE:        edm\n";
 printf ("FILENAME:        %s\n", $filename);
@@ -179,7 +179,7 @@ printf ("DATE:            %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900,$mon+1,$m
 
 # Step 3e of 4: Print header information to file 
 print  $fh  "USER:            raymond\n";
-print  $fh  "BUILD:           6.2\n";
+print  $fh  "BUILD:           6.3\n";
 print  $fh  "DESCRIPTION:     Stellar/Planetary Parameters Additions and Updates\n";
 print  $fh  "FILETYPE:        edm\n";
 printf $fh ("FILENAME:        %s\n", $filename);
