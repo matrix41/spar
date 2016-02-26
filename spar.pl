@@ -479,8 +479,8 @@ if ( $hash_ref == \%photometry )
 # hash to file and to screen. 
 # print     "EDMT | star | $hash_ref->{ objectid } | add |";
 # print $fh "EDMT | star | $hash_ref->{ objectid } | add |";
-print     "EDMT | star | $objectid | add |";
-print $fh "EDMT | star | $objectid | add |";
+print     "EDMT | star | $objectid | $addupdate |";
+print $fh "EDMT | star | $objectid | $addupdate |";
 print     "\\\n";
 print $fh "\\\n";
 
@@ -533,8 +533,8 @@ given ($inputset)
     }
     when ('e')
     { 
-        print     "metratio $hash_ref->{ metratio } |\\\n"; 
-        print $fh "metratio $hash_ref->{ metratio } |\\\n"; 
+        print     "metratio $hash_ref->{ metratio } |\\\n" if ( $hash_ref->{ met } !~ /null/ ); 
+        print $fh "metratio $hash_ref->{ metratio } |\\\n" if ( $hash_ref->{ met } !~ /null/ ); 
         print     "sparblend $hash_ref->{ sparblend } | sparrefid $hash_ref->{ sparrefid } ";
         print $fh "sparblend $hash_ref->{ sparblend } | sparrefid $hash_ref->{ sparrefid } ";
     }
