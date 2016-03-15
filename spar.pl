@@ -37,6 +37,7 @@ tie my %vsini, "Tie::IxHash" or die "could not tie %hash";
 tie my %rv, "Tie::IxHash" or die "could not tie %hash";
 tie my %spar, "Tie::IxHash" or die "could not tie %hash";
 tie my %photometry, "Tie::IxHash" or die "could not tie %photometry";
+tie my %b_v, "Tie::IxHash" or die "could not tie %b_v";
 
 # Step 1b of 4: Initialize the hashes
 # $parallax{plx} = 'null';
@@ -262,9 +263,17 @@ $spar{plxrefid} = 'null';
 $photometry{photmag} = 'null';
 $photometry{photmagerr} = 'null';
 $photometry{photmaglim} = 'null';
-$photometry{photblend} = 'null';
 $photometry{photband} = 'null';
+$photometry{photblend} = 'null';
 $photometry{photrefid} = 'null';
+
+$b_v{col} = 'null';
+$b_v{colerr} = 'null';
+$b_v{collim} = 'null';
+$b_v{colname} = 'null';
+$b_v{colblend} = 'null';
+$b_v{colrefid} = 'null';
+
 
 START:
 # Step 4a of 4: Prompt the user to select the stellar parameter set
@@ -272,9 +281,10 @@ print "Select the stellar parameter set (a-f): \n";
 print "a) parallax   \n";
 print "b) spectral   \n";
 print "c) vsini      \n";
-print "d) rv         \n";
+print "d) radv       \n";
 print "e) spar       \n";
 print "f) photometry \n";
+print "g) B-V        \n";
 $inputset = <STDIN>;
 chomp $inputset;
 given ($inputset) {
@@ -284,6 +294,7 @@ given ($inputset) {
    when ('d') { $hash_ref = \%rv        }
    when ('e') { $hash_ref = \%spar      }
    when ('f') { $hash_ref = \%photometry}
+   when ('g') { $hash_ref = \%b_v       }
    default    { die "\n\nNo matching case\n" }
 }
 
@@ -323,6 +334,10 @@ given ($inputset)
     when ('f')
     { 
         # photometry goes here; but none of the photometry params were suitable for @base_stem 
+    }
+    when ('g') 
+    {
+        # B-V color goes here; but none of the color params were suitable for @base_stem 
     }
     default    { die "\n\nNo matching case\n" }
 }
@@ -474,6 +489,15 @@ if ( $hash_ref == \%photometry )
     print $fh "#\n";
 }
 
+if ( $hash_ref == \%b_v ) 
+{
+    print     "#\n";
+    print     "# Addition of ( B-V ) stellar colors\n";
+    print     "#\n";
+    print $fh "#\n";
+    print $fh "# Addition of ( B-V ) stellar colors\n";
+    print $fh "#\n";
+}
 
 # Step 3f of 4: Print the contents of the current selected 
 # hash to file and to screen. 
@@ -544,6 +568,13 @@ given ($inputset)
         print $fh "photmag $hash_ref->{ photmag } | photmagerr $hash_ref->{ photmagerr } | photmaglim $hash_ref->{ photmaglim } | photband $hash_ref->{ photband } |\\ \n";
         print     "photblend $hash_ref->{ photblend } | photrefid $hash_ref->{ photrefid } ";
         print $fh "photblend $hash_ref->{ photblend } | photrefid $hash_ref->{ photrefid } ";
+    }
+    when ('g') 
+    {
+        print     "col $hash_ref->{ col } | colerr $hash_ref->{ colerr } | collim $hash_ref->{ collim } | colname $hash_ref->{ colname } |\\ \n";
+        print $fh "col $hash_ref->{ col } | colerr $hash_ref->{ colerr } | collim $hash_ref->{ collim } | colname $hash_ref->{ colname } |\\ \n";
+        print     "colblend $hash_ref->{ colblend } | colrefid $hash_ref->{ colrefid } ";
+        print $fh "colblend $hash_ref->{ colblend } | colrefid $hash_ref->{ colrefid } ";
     }
     default
     { die "\n\nNo matching case\n" }
