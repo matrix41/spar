@@ -198,8 +198,8 @@ $parallax{dist} = 'null';
 $parallax{disterr1} = 'null';
 $parallax{disterr2} = 'null';
 $parallax{distlim} = 'null';
-$parallax{plxblend} = 'null';
-$parallax{plxrefid} = 'null';
+$parallax{plxdistblend} = 'null';
+$parallax{plxdistrefid} = 'null';
 
 $spectral{sptstr} = 'null';
 $spectral{sptsys} = 'null';
@@ -287,7 +287,7 @@ print "c) vsini      \n";
 print "d) radv       \n";
 print "e) spar       \n";
 print "f) photometry \n";
-print "g) B-V        \n";
+print "g) B - V      \n";
 $inputset = <STDIN>;
 chomp $inputset;
 given ($inputset) {
@@ -543,8 +543,8 @@ given ($inputset)
 {
     when ('a')
     { 
-        print     "plxblend $hash_ref->{ plxblend } | plxrefid $hash_ref->{ plxrefid } ";
-        print $fh "plxblend $hash_ref->{ plxblend } | plxrefid $hash_ref->{ plxrefid } ";
+        print     "plxdistblend $hash_ref->{ plxdistblend } | plxdistrefid $hash_ref->{ plxdistrefid } ";
+        print $fh "plxdistblend $hash_ref->{ plxdistblend } | plxdistrefid $hash_ref->{ plxdistrefid } ";
     }
     when ('b')
     { 
@@ -567,6 +567,13 @@ given ($inputset)
     { 
         print     "metratio $hash_ref->{ metratio } |\\\n" if ( $hash_ref->{ met } !~ /null/ ); 
         print $fh "metratio $hash_ref->{ metratio } |\\\n" if ( $hash_ref->{ met } !~ /null/ ); 
+
+#        print     "plxrefid $hash_ref->{ plxdistrefid } |\\\n" if ( defined( $hash_ref->{ plxdistrefid } ) && ( $hash_ref->{ plxdistrefid } !~ /null/ ) ); 
+#        print $fh "plxrefid $hash_ref->{ plxdistrefid } |\\\n" if ( defined( $hash_ref->{ plxdistrefid } ) && ( $hash_ref->{ plxdistrefid } !~ /null/ ) ); 
+
+        print     "plxrefid $parallax{plxdistrefid} |\\\n" if ( $parallax{plxdistrefid} !~ /null/ ); 
+        print $fh "plxrefid $parallax{plxdistrefid} |\\\n" if ( $parallax{plxdistrefid} !~ /null/ ); 
+
         print     "sparblend $hash_ref->{ sparblend } | sparrefid $hash_ref->{ sparrefid } ";
         print $fh "sparblend $hash_ref->{ sparblend } | sparrefid $hash_ref->{ sparrefid } ";
     }
