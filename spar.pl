@@ -21,6 +21,9 @@ my $temp3;
 my $temp4;
 my $spectypeA;
 my $spectypeB;
+my $colname1;
+my $colname2;
+my $colname3;
 my @base_stem; 
 my @tertiary; 
 
@@ -362,6 +365,11 @@ while (1) {
     {
       ( $inputkey, $spectypeA, $spectypeB ) = split / /, $str;
       $inputvalue = $spectypeA . " " . $spectypeB;
+    }
+    if ( ( $inputkey =~ /^colname$/ ) )
+    {
+      ( $inputkey, $colname1, $colname2, $colname3 ) = split /\s+/, $str;
+      $inputvalue = $colname1." ".$colname2." ".$colname3;
     }
     if ($inputkey eq 'quit') {
         last;
