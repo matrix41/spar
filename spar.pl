@@ -41,6 +41,7 @@ tie my %rv, "Tie::IxHash" or die "could not tie %hash";
 tie my %spar, "Tie::IxHash" or die "could not tie %hash";
 tie my %photometry, "Tie::IxHash" or die "could not tie %photometry";
 tie my %b_v, "Tie::IxHash" or die "could not tie %b_v";
+tie my %rotation, "Tie::IxHash" or die "could not tie %rotation";
 
 # Step 1b of 4: Initialize the hashes
 # $parallax{plx} = 'null';
@@ -277,17 +278,24 @@ $b_v{colname} = 'null';
 $b_v{colblend} = 'null';
 $b_v{colrefid} = 'null';
 
+$rotation{rotp} = 'null';
+$rotation{rotperr} = 'null';
+$rotation{rotplim} = 'null';
+$rotation{rotpblend} = 'null';
+$rotation{rotprefid} = 'null';
+
 
 START:
 # Step 4a of 4: Prompt the user to select the stellar parameter set
 print "Select the stellar parameter set (a-f): \n";
-print "a) parallax   \n";
-print "b) spectral   \n";
-print "c) vsini      \n";
-print "d) radv       \n";
-print "e) spar       \n";
-print "f) photometry \n";
-print "g) B - V      \n";
+print "a) parallax         \n";
+print "b) spectral         \n";
+print "c) vsini            \n";
+print "d) radv             \n";
+print "e) spar             \n";
+print "f) photometry       \n";
+print "g) B - V            \n";
+print "h) stellar rotation \n";
 $inputset = <STDIN>;
 chomp $inputset;
 given ($inputset) {
@@ -298,6 +306,7 @@ given ($inputset) {
    when ('e') { $hash_ref = \%spar      }
    when ('f') { $hash_ref = \%photometry}
    when ('g') { $hash_ref = \%b_v       }
+   when ('h') { $hash_ref = \%rotation  }
    default    { die "\n\nNo matching case\n" }
 }
 
@@ -341,6 +350,10 @@ given ($inputset)
     when ('g') 
     {
         # B-V color goes here; but none of the color params were suitable for @base_stem 
+    }
+    when ('h') 
+    {
+        # stellar rotation goes here; but none of the stellar rotation parameters were suitable for @base_stem 
     }
     default    { die "\n\nNo matching case\n" }
 }
@@ -507,6 +520,16 @@ if ( $hash_ref == \%b_v )
     print $fh "#\n";
 }
 
+if ( $hash_ref == \%rotation ) 
+{
+    print     "#\n";
+    print     "# Addition of stellar rotation period\n";
+    print     "#\n";
+    print $fh "#\n";
+    print $fh "# Addition of stellar rotation period\n";
+    print $fh "#\n";
+}
+
 # Step 3f of 4: Print the contents of the current selected 
 # hash to file and to screen. 
 # print     "EDMT | star | $hash_ref->{ objectid } | add |";
@@ -590,6 +613,13 @@ given ($inputset)
         print $fh "col $hash_ref->{ col } | colerr $hash_ref->{ colerr } | collim $hash_ref->{ collim } | colname $hash_ref->{ colname } |\\ \n";
         print     "colblend $hash_ref->{ colblend } | colrefid $hash_ref->{ colrefid } ";
         print $fh "colblend $hash_ref->{ colblend } | colrefid $hash_ref->{ colrefid } ";
+    }
+    when ('h') 
+    {
+        print     "rotp $hash_ref->{ rotp } | rotperr $hash_ref->{ rotperr } | rotplim $hash_ref->{ rotplim } |\\ \n";
+        print $fh "rotp $hash_ref->{ rotp } | rotperr $hash_ref->{ rotperr } | rotplim $hash_ref->{ rotplim } |\\ \n";
+        print     "rotpblend $hash_ref->{ rotpblend } | rotprefid $hash_ref->{ rotprefid } ";
+        print $fh "rotpblend $hash_ref->{ rotpblend } | rotprefid $hash_ref->{ rotprefid } ";
     }
     default
     { die "\n\nNo matching case\n" }
