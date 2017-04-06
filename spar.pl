@@ -14,11 +14,6 @@ my $inputvalue;
 my $value;
 my $hash_ref;
 my $inputset;
-my $temp;
-my $temp1;
-my $temp2;
-my $temp3;
-my $temp4;
 my $spectypeA;
 my $spectypeB;
 my $colname1;
@@ -26,6 +21,7 @@ my $colname2;
 my $colname3;
 my @base_stem; 
 my @tertiary; 
+my $space;
 
 # Step 1a of 4: Tie the hashes (ie to preserve insertion order)
 # note to self: awk '{printf "$parallax{%s} = \x27null\x27;\n", $1}' star01.input
@@ -543,14 +539,17 @@ foreach my $base ( @base_stem )
 {
   if ( $hash_ref->{$base} !~ /null/ )
   {
-# $hash_ref->{ sparblend } = 0;
-    print     "$base $hash_ref->{$base} |";
-    print $fh "$base $hash_ref->{$base} |";
+    $space .= (" " x ( 20 - length("$base") - length($hash_ref->{$base}) ) ); 
+    print     "$base $space $hash_ref->{$base} |";
+    print $fh "$base $space $hash_ref->{$base} |";
+    $space = "";
     foreach my $append (@tertiary)
     {
-      my $fullname = "$base"."$append";
-      print     " $fullname $hash_ref->{$fullname} |";
-      print $fh " $fullname $hash_ref->{$fullname} |";
+        my $fullname = "$base"."$append";
+        $space .= (" " x ( 20 - length("$fullname") - length($hash_ref->{$fullname}) ) ); 
+        print     "$fullname $space $hash_ref->{$fullname} |";
+        print $fh "$fullname $space $hash_ref->{$fullname} |";
+        $space = "";
     }
     print     "\\\n";
     print $fh "\\\n";
