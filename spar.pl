@@ -547,8 +547,8 @@ foreach my $base ( @base_stem )
     {
         my $fullname = "$base"."$append";
         $space .= (" " x ( 20 - length("$fullname") - length($hash_ref->{$fullname}) ) ); 
-        print     "$fullname $space $hash_ref->{$fullname} |";
-        print $fh "$fullname $space $hash_ref->{$fullname} |";
+        print     " $fullname $space $hash_ref->{$fullname} |";
+        print $fh " $fullname $space $hash_ref->{$fullname} |";
         $space = "";
     }
     print     "\\\n";
