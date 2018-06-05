@@ -275,7 +275,8 @@ $b_v{colblend} = 'null';
 $b_v{colrefid} = 'null';
 
 $rotation{rotp} = 'null';
-$rotation{rotperr} = 'null';
+$rotation{rotperr1} = 'null';
+$rotation{rotperr2} = 'null';
 $rotation{rotplim} = 'null';
 $rotation{rotpblend} = 'null';
 $rotation{rotprefid} = 'null';
@@ -350,6 +351,8 @@ given ($inputset)
     when ('h') 
     {
         # stellar rotation goes here; but none of the stellar rotation parameters were suitable for @base_stem 
+        # UPDATE(2018-Jan-08): Solange changed the ingest tool for rotation period and it now accepts asymmetric uncertainties
+        push(@base_stem, "rotp");
     }
     default    { die "\n\nNo matching case\n" }
 }
@@ -605,6 +608,13 @@ given ($inputset)
         print $fh "photmag $hash_ref->{ photmag } | photmagerr $hash_ref->{ photmagerr } | photmaglim $hash_ref->{ photmaglim } | photband $hash_ref->{ photband } |\\ \n";
         print     "photblend $hash_ref->{ photblend } | photrefid $hash_ref->{ photrefid } ";
         print $fh "photblend $hash_ref->{ photblend } | photrefid $hash_ref->{ photrefid } ";
+
+        $hash_ref->{ photmagerr } = 'null'; # There is a bug in my script.  I need to flush the photmagerr parameter so that 
+                                            # the value is not carried over into the next iteration when I enter a different 
+                                            # value for photmag/photmagerr.  This is particularly a problem if photmagerr is 
+                                            # null in the next iteration.  In the new iteration, if photmagerr is null, then 
+                                            # the new photmag will be combined with the old photmagerr carried over from the 
+                                            # previous iteration.
     }
     when ('g') 
     {
@@ -615,8 +625,6 @@ given ($inputset)
     }
     when ('h') 
     {
-        print     "rotp $hash_ref->{ rotp } | rotperr $hash_ref->{ rotperr } | rotplim $hash_ref->{ rotplim } |\\ \n";
-        print $fh "rotp $hash_ref->{ rotp } | rotperr $hash_ref->{ rotperr } | rotplim $hash_ref->{ rotplim } |\\ \n";
         print     "rotpblend $hash_ref->{ rotpblend } | rotprefid $hash_ref->{ rotprefid } ";
         print $fh "rotpblend $hash_ref->{ rotpblend } | rotprefid $hash_ref->{ rotprefid } ";
     }
