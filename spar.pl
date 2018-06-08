@@ -38,6 +38,7 @@ tie my %spar, "Tie::IxHash" or die "could not tie %hash";
 tie my %photometry, "Tie::IxHash" or die "could not tie %photometry";
 tie my %b_v, "Tie::IxHash" or die "could not tie %b_v";
 tie my %rotation, "Tie::IxHash" or die "could not tie %rotation";
+tie my %pmotion, "Tie::IxHash" or die "could not tie %pmotion";
 
 # Step 1b of 4: Initialize the hashes
 # $parallax{plx} = 'null';
@@ -281,6 +282,18 @@ $rotation{rotplim} = 'null';
 $rotation{rotpblend} = 'null';
 $rotation{rotprefid} = 'null';
 
+$pmotion{pmra} = 'null';
+$pmotion{pmraerr} = 'null';
+$pmotion{pmdec} = 'null';
+$pmotion{pmdecerr} = 'null';
+$pmotion{pm} = 'null';
+$pmotion{pmerr} = 'null';
+$pmotion{pmang} = 'null';
+$pmotion{pmangerr} = 'null';
+$pmotion{pmlim} = 'null';
+$pmotion{pmblend} = 'null';
+$pmotion{pmrefid} = 'null';
+
 
 START:
 # Step 4a of 4: Prompt the user to select the stellar parameter set
@@ -293,6 +306,7 @@ print "e) spar             \n";
 print "f) photometry       \n";
 print "g) B - V            \n";
 print "h) stellar rotation \n";
+print "i) proper motion    \n";
 $inputset = <STDIN>;
 chomp $inputset;
 given ($inputset) {
@@ -304,6 +318,7 @@ given ($inputset) {
    when ('f') { $hash_ref = \%photometry}
    when ('g') { $hash_ref = \%b_v       }
    when ('h') { $hash_ref = \%rotation  }
+   when ('i') { $hash_ref = \%pmotion   }
    default    { die "\n\nNo matching case\n" }
 }
 
@@ -353,6 +368,10 @@ given ($inputset)
         # stellar rotation goes here; but none of the stellar rotation parameters were suitable for @base_stem 
         # UPDATE(2018-Jan-08): Solange changed the ingest tool for rotation period and it now accepts asymmetric uncertainties
         push(@base_stem, "rotp");
+    }
+    when ('i')
+    { 
+        # proper motion goes here; but none of the proper motion params were suitable for @base_stem 
     }
     default    { die "\n\nNo matching case\n" }
 }
@@ -529,6 +548,16 @@ if ( $hash_ref == \%rotation )
     print $fh "#\n";
 }
 
+if ( $hash_ref == \%pmotion ) 
+{
+    print     "#\n";
+    print     "# Addition of Proper Motion information\n";
+    print     "#\n";
+    print $fh "#\n";
+    print $fh "# Addition of Proper Motion information\n";
+    print $fh "#\n";
+}
+
 # Step 3f of 4: Print the contents of the current selected 
 # hash to file and to screen. 
 # print     "EDMT | star | $hash_ref->{ objectid } | add |";
@@ -627,6 +656,26 @@ given ($inputset)
     {
         print     "rotpblend $hash_ref->{ rotpblend } | rotprefid $hash_ref->{ rotprefid } ";
         print $fh "rotpblend $hash_ref->{ rotpblend } | rotprefid $hash_ref->{ rotprefid } ";
+    }
+    when ('i') 
+    {
+        print     "pmra $hash_ref->{ pmra } | pmraerr $hash_ref->{ pmraerr } |\\ \n";
+        print $fh "pmra $hash_ref->{ pmra } | pmraerr $hash_ref->{ pmraerr } |\\ \n";
+
+        print     "pmdec $hash_ref->{ pmdec } | pmdecerr $hash_ref->{ pmdecerr } |\\ \n";
+        print $fh "pmdec $hash_ref->{ pmdec } | pmdecerr $hash_ref->{ pmdecerr } |\\ \n";
+
+        print     "pm $hash_ref->{ pm } | pmerr $hash_ref->{ pmerr } |\\ \n";
+        print $fh "pm $hash_ref->{ pm } | pmerr $hash_ref->{ pmerr } |\\ \n";
+
+        print     "pmang $hash_ref->{ pmang } | pmangerr $hash_ref->{ pmangerr } |\\ \n";
+        print $fh "pmang $hash_ref->{ pmang } | pmangerr $hash_ref->{ pmangerr } |\\ \n";
+
+        print     "pmlim $hash_ref->{ pmlim } |\\ \n";
+        print $fh "pmlim $hash_ref->{ pmlim } |\\ \n";
+
+        print     "pmblend $hash_ref->{ pmblend } | pmrefid $hash_ref->{ pmrefid } ";
+        print $fh "pmblend $hash_ref->{ pmblend } | pmrefid $hash_ref->{ pmrefid } ";
     }
     default
     { die "\n\nNo matching case\n" }
